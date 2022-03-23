@@ -10,9 +10,21 @@ export default function Slider() {
     inProgress: false,
   });
 
-  const nextSlide = () => {};
+  const nextSlide = () => {
+    if (slideAnim.index !== dataSlider.length - 1) {
+      setSlideAnim({ index: slideAnim.index + 1, inProgress: true });
+    } else {
+      setSlideAnim({ index: 0, inProgress: true });
+    }
+  };
 
-  const prevSlide = () => {};
+  const prevSlide = () => {
+    if (slideAnim.index !== 0) {
+      setSlideAnim({ index: slideAnim.index - 1, inProgress: true });
+    } else {
+      setSlideAnim({ index: dataSlider.length - 1, inProgress: true });
+    }
+  };
 
   return (
     <div className={styles.containerSlider}>
