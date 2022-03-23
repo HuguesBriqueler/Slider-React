@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Slider.module.css";
 import { dataSlider } from "../dataSlider";
 import BtnSlider from "./BtnSlider";
@@ -10,18 +10,29 @@ export default function Slider() {
     inProgress: false,
   });
 
+  // This hook prevent 'spam click' by adding a delay before reseting 'slideAnim.inProgress' state to false.
+  // It only occures everytime 'inProgress state' is set to true.
+  useEffect(() => {
+    if (slideAnim.inProgress) {
+      setTimeout(() => {
+        setSlideAnim((prevState) => ({ ...prevState, inProgress: false }));
+      }, 500);
+    }
+  }, [slideAnim.inProgress]);
+
+  // Those two function (nextSlide and prevSlide) handle arrow buttons by simply increnting or decrementing
+  // images index and setting 'inProgress state' to true in order to prevent 'spam click'
   const nextSlide = () => {
-    if (slideAnim.index !== dataSlider.length - 1) {
+    if (slideAnim.index !== dataSlider.length - 1 && !slideAnim.inProgress) {
       setSlideAnim({ index: slideAnim.index + 1, inProgress: true });
-    } else {
+    } else if (!slideAnim.inProgress) {
       setSlideAnim({ index: 0, inProgress: true });
     }
   };
-
   const prevSlide = () => {
-    if (slideAnim.index !== 0) {
+    if (slideAnim.index !== 0 && !slideAnim.inProgress) {
       setSlideAnim({ index: slideAnim.index - 1, inProgress: true });
-    } else {
+    } else if (!slideAnim.inProgress) {
       setSlideAnim({ index: dataSlider.length - 1, inProgress: true });
     }
   };
